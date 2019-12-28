@@ -44,7 +44,7 @@ var Callable = module.Callable,
 
 ## How to use
 
-```TypeScript
+```typescript
 class ChildCallable extends Callable<string> {
       _call(...args: any[]): string {
         return `Hello ${args[0]}`;
