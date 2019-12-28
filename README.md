@@ -57,7 +57,7 @@ let xc = x("World");
 console.log(xc); //Hello World
 ```
 
-## `Callable<TResult>`
+## `abstract class Callable<TResult>`
 
 The Bind Way
 
@@ -81,7 +81,7 @@ Cons
 
 - arguments and arguments.callee are unavailable in ‘strict mode’, see MDN for more.
 
-## `CallableByProxy<TResult>`
+## `abstract class CallableByProxy<TResult>`
 
 Pros
 
@@ -93,7 +93,7 @@ Cons
 - Requires wrapping objects created by Callable in a Proxy.
 - A small performance penalty for using Proxy handlers.
 
-## `CallableByClosure<TResult>`
+## `abstract class CallableByClosure<TResult>`
 
 Pros
 
