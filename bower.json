@@ -1,0 +1,26 @@
+{
+  "name": "lopatnov-callable",
+  "description": "Callable abstraction for making function-like objects",
+  "main": "dist/callable.js",
+  "authors": [
+    "lopatnov"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "callable",
+    "function",
+    "object",
+    "typescript",
+    "typescript-library",
+    "javascript",
+    "javascript-library"
+  ],
+  "homepage": "https://lopatnov.github.io/callable/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
