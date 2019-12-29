@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "author": "lopatnov",
   "description": "Callable abstraction for making function-like objects",
-  "homepage": "https://github.com/lopatnov/callable#readme",
+  "homepage": "https://lopatnov.github.io/callable/",
   "keywords": [
     "callable",
     "function",
