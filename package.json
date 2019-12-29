@@ -1,6 +1,6 @@
 {
   "name": "@lopatnov/callable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Apache-2.0",
   "author": "lopatnov",
   "description": "Callable abstraction for making function-like objects",
