@@ -3,7 +3,7 @@ import {
   CallableByCallee,
   CallableByClosure,
   CallableByProxy
-} from "../src/callable";
+} from "..";
 
 describe("Base tests", () => {
   it("should create Callable", () => {
