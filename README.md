@@ -1,5 +1,6 @@
 # @lopatnov/callable
 
+![npm](https://img.shields.io/npm/dt/@lopatnov/callable)
 [![NPM version](https://badge.fury.io/js/%40lopatnov%2Fcallable.svg)](https://www.npmjs.com/package/@lopatnov/callable)
 ![License](https://img.shields.io/github/license/lopatnov/callable)
 [![Build Status](https://travis-ci.org/lopatnov/callable.png?branch=master)](https://travis-ci.org/lopatnov/callable)
