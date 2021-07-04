@@ -36,7 +36,7 @@ npm install @lopatnov/callable
 ### TypeScript package import
 
 ```typescript
-import Callable from "@lopatnov/callable";
+import Callable from "@lopatnov/callable"; // byBind
 ```
 
 or
@@ -51,7 +51,7 @@ import CallableByProxy from "@lopatnov/callable/dist/byProxy";
 ### JavaScript package import
 
 ```javascript
-var Callable = require("@lopatnov/callable");
+var Callable = require("@lopatnov/callable"); // byBind
 ```
 
 or
@@ -77,16 +77,15 @@ class ChildCallable extends Callable<string> {
 }
 
 let x = new ChildCallable(); // <-- returns function
-let xc = x("World");
+let xc = x("World"); // <-- calls _call function of ChildCallable class
 
-console.log(xc); //Hello World
+console.log(xc); // "Hello World"
 ```
 
 ### JavaScript usage
 
 ```javascript
-var m = require("@lopatnov/callable");
-var Callable = m.Callable;
+var Callable = require("@lopatnov/callable");
 
 class ChildCallable extends Callable {
   _call(...args) {
@@ -95,9 +94,9 @@ class ChildCallable extends Callable {
 }
 
 let x = new ChildCallable(); // <-- returns function
-let xc = x("World");
+let xc = x("World"); // <-- calls _call function of ChildCallable class
 
-console.log(xc); //Hello World
+console.log(xc); // "Hello World"
 ```
 
 ## Description of abstract class `Callable<TResult>` and it's variations
