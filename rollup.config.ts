@@ -1,3 +1,4 @@
+import fs from "fs";
 import json from "rollup-plugin-json";
 import typescript from "rollup-plugin-typescript2";
 import commonjs from "rollup-plugin-commonjs";
@@ -6,18 +7,24 @@ import uglify from "@lopatnov/rollup-plugin-uglify";
 
 import pkg from "./package.json";
 
-export default [
-  {
-    input: pkg.source,
+const configs = [];
+fs.readdirSync('./src').forEach(file => {
+  const fileName = file.split('.').slice(0, -1).join('.');
+  const filePath = `./src/${file}`;
+  const umdTarget = `dist/${fileName}.js`;
+  const umdTargetMin = `dist/${fileName}.min.js`;
+  const esTarget = `dist/${fileName}.es.js`;
+  configs.push({
+    input: filePath,
     output: [
       {
-        file: pkg.main,
+        file: umdTarget,
         format: "umd",
         name: pkg.umdName,
         sourcemap: true
       },
       {
-        file: pkg.module,
+        file: esTarget,
         format: "es",
         sourcemap: true
       }
@@ -34,11 +41,12 @@ export default [
       resolve(),
       commonjs()
     ]
-  },
-  {
-    input: pkg.source,
+  });
+
+  configs.push({
+    input: filePath,
     output: {
-      file: pkg.main_min,
+      file: umdTargetMin,
       name: pkg.umdName,
       format: "umd"
     },
@@ -55,5 +63,7 @@ export default [
       commonjs(),
       uglify()
     ]
-  }
-];
+  });
+});
+
+export default configs;
