@@ -7,9 +7,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/lopatnov/callable)](https://github.com/lopatnov/callable/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/lopatnov/callable)](https://github.com/lopatnov/callable/issues)
 
-[![Patreon](https://img.shields.io/badge/Donate-Patreon-informational)](https://www.patreon.com/lopatnov)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-lopatnov-informational?style=social&logo=linkedin)](https://www.linkedin.com/in/lopatnov/)
-
 A TypeScript abstract base class that lets you create class instances that behave as callable functions. Extend `Callable<TResult>`, implement the `_call` method, and every `new` instance becomes directly invokable — with full prototype chain, type safety, and IDE completion preserved.
 
 Four independent implementations are provided, each with different trade-offs, so you can pick the one that best fits your runtime environment and performance requirements.
