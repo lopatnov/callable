@@ -7,7 +7,6 @@
     "strict": true,
     "sourceMap": true,
     "declaration": true,
-    "outDir": "dist/lib",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,

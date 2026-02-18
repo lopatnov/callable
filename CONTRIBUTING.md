@@ -46,7 +46,8 @@ callable/
 │   ├── byClosure.ts
 │   └── byProxy.ts
 ├── tests/                 # Jest test suite
-│   └── callable.test.ts
+│   ├── callable.test.ts
+│   └── dist.test.ts
 ├── dist/                  # Build output (generated, not committed)
 ├── rollup.config.mjs      # Rollup build configuration
 ├── tsconfig.json          # TypeScript config (production)
@@ -139,17 +140,17 @@ To start making a contribution:
    $ git remote add upstream https://github.com/lopatnov/callable
    ```
 
-1. Pull upstream changes into your local repositories `development` branch:
+1. Pull upstream changes into your local `master` branch:
 
    ```shell
-   $ git checkout development
-   $ git pull upstream development && git push origin development
+   $ git checkout master
+   $ git pull upstream master && git push origin master
    ```
 
-1. Create a new branch from the `development` branch:
+1. Create a new branch from `master`:
    ![branch](https://help.github.com/assets/images/help/branch/branch-selection-dropdown.png)
 
-   **IMPORTANT:** Make sure you are on the `development` branch first.
+   **IMPORTANT:** Make sure you are on the `master` branch first.
 
    ```shell
    $ git checkout -b <YOUR-NEW-BRANCH>
@@ -169,7 +170,7 @@ To start making a contribution:
    $ git push -u origin <YOUR-NEW-BRANCH>
    ```
 
-1. From your forked GitHub repository, open a pull request in the branch containing your contributions. Target the project's `development` branch for the pull request.
+1. From your forked GitHub repository, open a pull request in the branch containing your contributions. Target the project's `master` branch for the pull request.
 
 1. At this point, your contribution has been submitted for review. Please be patient while your contribution is being reviewed as this can take some time. Meanwhile, if there are questions or comments on your contribution, please respond and/or update with future commits.
 

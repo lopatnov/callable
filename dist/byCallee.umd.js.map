@@ -1,1 +1,1 @@
-{"version":3,"file":"byCallee.umd.js","sources":["../src/byCallee.ts"],"sourcesContent":[null],"names":[],"mappings":";;;;;;IAAc,MAAgB,QAAkB,SAAQ,QAAQ,CAAA;IAC9D,IAAA,WAAA,GAAA;YACE,KAAK,CAAC,kEAAkE,CAAC;QAC3E;IAGD;;;;;;;;"}
+{"version":3,"file":"byCallee.umd.js","sources":["../src/byCallee.ts"],"sourcesContent":[null],"names":[],"mappings":";;;;;;IAAA;;;;;;;;;;;;;;;;;;;;;;;;;IAyBG;IACW,MAAgB,QAAkB,SAAQ,QAAQ,CAAA;IAC9D,IAAA,WAAA,GAAA;YACE,KAAK,CAAC,kEAAkE,CAAC;QAC3E;IAOD;;;;;;;;"}
