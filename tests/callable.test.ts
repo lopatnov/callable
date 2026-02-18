@@ -1,7 +1,8 @@
-import CallableByBind from "../dist/byBind";
-import CallableByCallee from "../dist/byCallee";
-import CallableByClosure from "../dist/byClosure";
-import CallableByProxy from "../dist/byProxy";
+import { describe, it, expect } from "@jest/globals";
+import CallableByBind from "../src/byBind";
+import CallableByCallee from "../src/byCallee";
+import CallableByClosure from "../src/byClosure";
+import CallableByProxy from "../src/byProxy";
 
 describe("Base tests", () => {
   it("should create Callable by bind", () => {
@@ -11,8 +12,8 @@ describe("Base tests", () => {
       }
     }
 
-    let x = new ChildCallable();
-    let actual = x("Arg 1");
+    const x = new ChildCallable();
+    const actual = x("Arg 1");
     expect(actual).toBe("Test 1 Arg 1");
   });
 
@@ -23,8 +24,8 @@ describe("Base tests", () => {
       }
     }
 
-    let x = new ChildCallable();
-    let actual = x("Arg 1");
+    const x = new ChildCallable();
+    const actual = x("Arg 1");
     expect(actual).toBe("Test 2 Arg 1");
   });
 
@@ -35,8 +36,8 @@ describe("Base tests", () => {
       }
     }
 
-    let x = new ChildCallable();
-    let actual = x("Arg 1");
+    const x = new ChildCallable();
+    const actual = x("Arg 1");
     expect(actual).toBe("Test 3 Arg 1");
   });
 
@@ -47,8 +48,8 @@ describe("Base tests", () => {
       }
     }
 
-    let x = new ChildCallable();
-    let actual = x("Arg 1");
+    const x = new ChildCallable();
+    const actual = x("Arg 1");
     expect(actual).toBe("Test 4 Arg 1");
   });
 });
