@@ -11,15 +11,15 @@
  *   - Multi-level inheritance works
  *   - TypeScript declaration files expose the correct generic types
  *
- * Jest resolves "../dist/byBind" → "../dist/byBind.cjs" via moduleNameMapper.
- * TypeScript resolves types from "../dist/byBind.d.ts" at compile time.
+ * Ava has no moduleNameMapper, so imports use explicit ".cjs" extensions.
+ * TypeScript resolves types from tests/dist-cjs.d.ts at compile time.
  */
 
-import { describe, expect, it } from "@jest/globals";
-import CallableByBind from "../dist/byBind";
-import CallableByCallee from "../dist/byCallee";
-import CallableByClosure from "../dist/byClosure";
-import CallableByProxy from "../dist/byProxy";
+import test from "ava";
+import CallableByBind from "../dist/byBind.cjs";
+import CallableByCallee from "../dist/byCallee.cjs";
+import CallableByClosure from "../dist/byClosure.cjs";
+import CallableByProxy from "../dist/byProxy.cjs";
 
 // ---------------------------------------------------------------------------
 // Shared suite — run for every implementation
@@ -31,127 +31,125 @@ import CallableByProxy from "../dist/byProxy";
 // implementation sections below verify the correct TypeScript behaviour using
 // the fully-typed imports.
 function distSuite(label: string, Ctor: any): void {
-  describe(label, () => {
-    it("exports a constructor function", () => {
-      expect(typeof Ctor).toBe("function");
-    });
+  test(`${label} — exports a constructor function`, (t) => {
+    t.is(typeof Ctor, "function");
+  });
 
-    it("creates an instance that is callable (typeof 'function')", () => {
-      class Impl extends Ctor {
-        _call(): string {
-          return "ok";
-        }
+  test(`${label} — creates an instance that is callable (typeof 'function')`, (t) => {
+    class Impl extends Ctor {
+      _call(): string {
+        return "ok";
       }
-      const x: any = new Impl();
-      expect(typeof x).toBe("function");
-    });
+    }
+    const x: any = new Impl();
+    t.is(typeof x, "function");
+  });
 
-    it("instance() invokes _call and returns its value", () => {
-      class Impl extends Ctor {
-        _call(a: string): string {
-          return `hello ${a}`;
-        }
+  test(`${label} — instance() invokes _call and returns its value`, (t) => {
+    class Impl extends Ctor {
+      _call(a: string): string {
+        return `hello ${a}`;
       }
-      const x: any = new Impl();
-      expect(x("world")).toBe("hello world");
-    });
+    }
+    const x: any = new Impl();
+    t.is(x("world"), "hello world");
+  });
 
-    it("forwards multiple arguments to _call", () => {
-      class Impl extends Ctor {
-        _call(a: number, b: number, c: number): number {
-          return a + b + c;
-        }
+  test(`${label} — forwards multiple arguments to _call`, (t) => {
+    class Impl extends Ctor {
+      _call(a: number, b: number, c: number): number {
+        return a + b + c;
       }
-      const x: any = new Impl();
-      expect(x(1, 2, 3)).toBe(6);
-    });
+    }
+    const x: any = new Impl();
+    t.is(x(1, 2, 3), 6);
+  });
 
-    it("x instanceof OwnClass is true", () => {
-      class Impl extends Ctor {
-        _call(): void {}
-      }
-      const x: any = new Impl();
-      expect(x instanceof Impl).toBe(true);
-    });
+  test(`${label} — x instanceof OwnClass is true`, (t) => {
+    class Impl extends Ctor {
+      _call(): void {}
+    }
+    const x: any = new Impl();
+    t.true(x instanceof Impl);
+  });
 
-    it("x instanceof base Callable class is true", () => {
-      class Impl extends Ctor {
-        _call(): void {}
-      }
-      const x: any = new Impl();
-      expect(x instanceof Ctor).toBe(true);
-    });
+  test(`${label} — x instanceof base Callable class is true`, (t) => {
+    class Impl extends Ctor {
+      _call(): void {}
+    }
+    const x: any = new Impl();
+    t.true(x instanceof Ctor);
+  });
 
-    it("this inside _call refers to the callable instance", () => {
-      class Impl extends Ctor {
-        tag = "context-marker";
-        _call(): string {
-          return this.tag;
-        }
+  test(`${label} — this inside _call refers to the callable instance`, (t) => {
+    class Impl extends Ctor {
+      tag = "context-marker";
+      _call(): string {
+        return this.tag;
       }
-      const x: any = new Impl();
-      expect(x()).toBe("context-marker");
-    });
+    }
+    const x: any = new Impl();
+    t.is(x(), "context-marker");
+  });
 
-    it("instance fields set via constructor arguments are accessible in _call", () => {
-      class Impl extends Ctor {
-        value: string;
-        constructor(v: string) {
-          super();
-          this.value = v;
-        }
-        _call(): string {
-          return this.value;
-        }
+  test(`${label} — instance fields set via constructor arguments are accessible in _call`, (t) => {
+    class Impl extends Ctor {
+      value: string;
+      constructor(v: string) {
+        super();
+        this.value = v;
       }
-      const x: any = new Impl("dynamic");
-      expect(x()).toBe("dynamic");
-    });
+      _call(): string {
+        return this.value;
+      }
+    }
+    const x: any = new Impl("dynamic");
+    t.is(x(), "dynamic");
+  });
 
-    it("state accumulates across successive calls", () => {
-      class Counter extends Ctor {
-        private n = 0;
-        _call(): number {
-          return ++this.n;
-        }
+  test(`${label} — state accumulates across successive calls`, (t) => {
+    class Counter extends Ctor {
+      private n = 0;
+      _call(): number {
+        return ++this.n;
       }
-      const counter: any = new Counter();
-      expect(counter()).toBe(1);
-      expect(counter()).toBe(2);
-      expect(counter()).toBe(3);
-    });
+    }
+    const counter: any = new Counter();
+    t.is(counter(), 1);
+    t.is(counter(), 2);
+    t.is(counter(), 3);
+  });
 
-    it("works across a multi-level inheritance chain", () => {
-      class Base extends Ctor {
-        protected prefix = "base";
-        _call(s: string): string {
-          return `${this.prefix}:${s}`;
-        }
+  test(`${label} — works across a multi-level inheritance chain`, (t) => {
+    class Base extends Ctor {
+      protected prefix = "base";
+      _call(s: string): string {
+        return `${this.prefix}:${s}`;
       }
-      class Child extends Base {
-        protected prefix = "child";
-      }
-      const x: any = new Child();
-      expect(x instanceof Child).toBe(true);
-      expect(x instanceof Base).toBe(true);
-      expect(x instanceof Ctor).toBe(true);
-      expect(x("test")).toBe("child:test");
-    });
+    }
+    class Child extends Base {
+      protected prefix = "child";
+    }
+    const x: any = new Child();
+    t.true(x instanceof Child);
+    t.true(x instanceof Base);
+    t.true(x instanceof Ctor);
+    t.is(x("test"), "child:test");
+  });
 
-    it("two independent instances do not share state", () => {
-      class Impl extends Ctor {
-        private n = 0;
-        _call(): number {
-          return ++this.n;
-        }
+  test(`${label} — two independent instances do not share state`, (t) => {
+    class Impl extends Ctor {
+      private n = 0;
+      _call(): number {
+        return ++this.n;
       }
-      const a: any = new Impl();
-      const b: any = new Impl();
-      a();
-      a();
-      expect(a()).toBe(3);
-      expect(b()).toBe(1); // b's state is independent
-    });
+    }
+    const a: any = new Impl();
+    const b: any = new Impl();
+    a();
+    a();
+    t.is(a(), 3);
+    t.is(b(), 1);
   });
 }
 
@@ -168,176 +166,165 @@ distSuite("dist/byProxy.cjs", CallableByProxy);
 // The tests below confirm this and serve as a compile-time regression guard.
 // ---------------------------------------------------------------------------
 
-describe("TypeScript call-signature — direct typed subclasses are callable", () => {
-  it("CallableByBind subclass: new Impl() is callable without casting", () => {
-    class Greeter extends CallableByBind<string> {
-      _call(name: string): string {
-        return `Hello, ${name}!`;
-      }
+test("TypeScript call-signature — CallableByBind subclass is callable without casting", (t) => {
+  class Greeter extends CallableByBind<string> {
+    _call(name: string): string {
+      return `Hello, ${name}!`;
     }
-    const greet = new Greeter();
-    // TypeScript knows `greet` is callable because Greeter → CallableByBind → Function.
-    // If this line causes TS2349 the d.ts no longer exports `extends Function` properly.
-    const result: string = greet("World");
-    expect(result).toBe("Hello, World!");
-  });
+  }
+  const greet = new Greeter();
+  // TypeScript knows `greet` is callable because Greeter → CallableByBind → Function.
+  // If this line causes TS2349 the d.ts no longer exports `extends Function` properly.
+  const result: string = greet("World");
+  t.is(result, "Hello, World!");
+});
 
-  it("CallableByCallee subclass: new Impl() is callable without casting", () => {
-    class Adder extends CallableByCallee<number> {
-      _call(a: number, b: number): number {
-        return a + b;
-      }
+test("TypeScript call-signature — CallableByCallee subclass is callable without casting", (t) => {
+  class Adder extends CallableByCallee<number> {
+    _call(a: number, b: number): number {
+      return a + b;
     }
-    const add = new Adder();
-    const result: number = add(3, 4);
-    expect(result).toBe(7);
-  });
+  }
+  const add = new Adder();
+  const result: number = add(3, 4);
+  t.is(result, 7);
+});
 
-  it("CallableByClosure subclass: new Impl() is callable without casting", () => {
-    class Multiplier extends CallableByClosure<number> {
-      constructor(private factor: number) {
-        super();
-      }
-      _call(n: number): number {
-        return n * this.factor;
-      }
+test("TypeScript call-signature — CallableByClosure subclass is callable without casting", (t) => {
+  class Multiplier extends CallableByClosure<number> {
+    constructor(private factor: number) {
+      super();
     }
-    const triple = new Multiplier(3);
-    const result: number = triple(7);
-    expect(result).toBe(21);
-  });
+    _call(n: number): number {
+      return n * this.factor;
+    }
+  }
+  const triple = new Multiplier(3);
+  const result: number = triple(7);
+  t.is(result, 21);
+});
 
-  it("CallableByProxy subclass: new Impl() is callable without casting", () => {
-    class Toggle extends CallableByProxy<boolean> {
-      _call(b: boolean): boolean {
-        return !b;
-      }
+test("TypeScript call-signature — CallableByProxy subclass is callable without casting", (t) => {
+  class Toggle extends CallableByProxy<boolean> {
+    _call(b: boolean): boolean {
+      return !b;
     }
-    const toggle = new Toggle();
-    const result: boolean = toggle(false);
-    expect(result).toBe(true);
-  });
+  }
+  const toggle = new Toggle();
+  const result: boolean = toggle(false);
+  t.true(result);
+});
 
-  it("generic TResult is preserved — assigning result to wrong type is a TS error", () => {
-    class Stringify extends CallableByBind<string> {
-      _call(n: number): string {
-        return String(n);
-      }
+test("TypeScript call-signature — generic TResult is preserved", (t) => {
+  class Stringify extends CallableByBind<string> {
+    _call(n: number): string {
+      return String(n);
     }
-    const str = new Stringify();
-    // `str(42)` returns `string`; next line would fail tsc if TResult were `any`
-    const result: string = str(42);
-    expect(result).toBe("42");
-  });
+  }
+  const str = new Stringify();
+  // `str(42)` returns `string`; next line would fail tsc if TResult were `any`
+  const result: string = str(42);
+  t.is(result, "42");
 });
 
 // ---------------------------------------------------------------------------
 // byBind — specific
 // ---------------------------------------------------------------------------
 
-describe("dist/byBind.cjs — specific", () => {
-  it("bound function prototype chain includes Impl.prototype (instanceof works via bind delegation)", () => {
-    // Function.prototype.bind copies [[Prototype]] from the target to the
-    // bound function, so instanceof delegates correctly without Proxy.
-    class Impl extends CallableByBind<void> {
-      _call(): void {}
-    }
-    const x = new Impl();
-    // x is the bound function; its [[Prototype]] === Impl.prototype
-    expect(Object.getPrototypeOf(x)).toBe(Impl.prototype);
-  });
+test("dist/byBind.cjs — bound function prototype chain includes Impl.prototype", (t) => {
+  // Function.prototype.bind copies [[Prototype]] from the target to the
+  // bound function, so instanceof delegates correctly without Proxy.
+  class Impl extends CallableByBind<void> {
+    _call(): void {}
+  }
+  const x = new Impl();
+  t.is(Object.getPrototypeOf(x), Impl.prototype);
+});
 
-  it("TypeScript generic TResult is enforced at compile time", () => {
-    class Doubler extends CallableByBind<number> {
-      _call(n: number): number {
-        return n * 2;
-      }
+test("dist/byBind.cjs — TypeScript generic TResult is enforced at compile time", (t) => {
+  class Doubler extends CallableByBind<number> {
+    _call(n: number): number {
+      return n * 2;
     }
-    const double = new Doubler();
-    const result: number = double(21);
-    expect(result).toBe(42);
-  });
+  }
+  const double = new Doubler();
+  const result: number = double(21);
+  t.is(result, 42);
 });
 
 // ---------------------------------------------------------------------------
 // byCallee — specific
 // ---------------------------------------------------------------------------
 
-describe("dist/byCallee.cjs — specific", () => {
-  it("arguments.callee inside the created function is accessible (non-strict function body)", () => {
-    // The function body created by new Function(...) is always non-strict,
-    // so arguments.callee is available even when the test file uses strict mode.
-    class Impl extends CallableByCallee<string> {
-      _call(s: string): string {
-        return `callee:${s}`;
-      }
+test("dist/byCallee.cjs — arguments.callee is accessible (non-strict function body)", (t) => {
+  // The function body created by new Function(...) is always non-strict,
+  // so arguments.callee is available even when the test file uses strict mode.
+  class Impl extends CallableByCallee<string> {
+    _call(s: string): string {
+      return `callee:${s}`;
     }
-    const x = new Impl();
-    expect(x("ok")).toBe("callee:ok");
-  });
+  }
+  const x = new Impl();
+  t.is(x("ok"), "callee:ok");
+});
 
-  it("TypeScript generic TResult is enforced at compile time", () => {
-    class Upper extends CallableByCallee<string> {
-      _call(s: string): string {
-        return s.toUpperCase();
-      }
+test("dist/byCallee.cjs — TypeScript generic TResult is enforced at compile time", (t) => {
+  class Upper extends CallableByCallee<string> {
+    _call(s: string): string {
+      return s.toUpperCase();
     }
-    const upper = new Upper();
-    const result: string = upper("hello");
-    expect(result).toBe("HELLO");
-  });
+  }
+  const upper = new Upper();
+  const result: string = upper("hello");
+  t.is(result, "HELLO");
 });
 
 // ---------------------------------------------------------------------------
 // byClosure — specific
 // ---------------------------------------------------------------------------
 
-describe("dist/byClosure.cjs — specific", () => {
-  it("Object.setPrototypeOf wires the closure to Impl.prototype", () => {
-    class Impl extends CallableByClosure<void> {
-      _call(): void {}
-    }
-    const x = new Impl();
-    // The closure returned from the constructor has its [[Prototype]] set
-    // to Impl.prototype via Object.setPrototypeOf.
-    expect(Object.getPrototypeOf(x)).toBe(Impl.prototype);
-  });
+test("dist/byClosure.cjs — Object.setPrototypeOf wires the closure to Impl.prototype", (t) => {
+  class Impl extends CallableByClosure<void> {
+    _call(): void {}
+  }
+  const x = new Impl();
+  // The closure returned from the constructor has its [[Prototype]] set
+  // to Impl.prototype via Object.setPrototypeOf.
+  t.is(Object.getPrototypeOf(x), Impl.prototype);
+});
 
-  it("TypeScript generic TResult is enforced at compile time", () => {
-    class Joiner extends CallableByClosure<string> {
-      _call(...args: string[]): string {
-        return args.join("-");
-      }
+test("dist/byClosure.cjs — TypeScript generic TResult is enforced at compile time", (t) => {
+  class Joiner extends CallableByClosure<string> {
+    _call(...args: string[]): string {
+      return args.join("-");
     }
-    const join = new Joiner();
-    const result: string = join("a", "b", "c");
-    expect(result).toBe("a-b-c");
-  });
+  }
+  const join = new Joiner();
+  const result: string = join("a", "b", "c");
+  t.is(result, "a-b-c");
 });
 
 // ---------------------------------------------------------------------------
 // byProxy — specific
 // ---------------------------------------------------------------------------
 
-describe("dist/byProxy.cjs — specific", () => {
-  it("Proxy apply trap forwards all argument types correctly", () => {
-    class Impl extends CallableByProxy<string[]> {
-      _call(...args: any[]): string[] {
-        return args.map(String);
-      }
+test("dist/byProxy.cjs — Proxy apply trap forwards all argument types correctly", (t) => {
+  class Impl extends CallableByProxy<string[]> {
+    _call(...args: any[]): string[] {
+      return args.map(String);
     }
-    const x = new Impl();
-    expect(x(1, true, "str", null)).toEqual(["1", "true", "str", "null"]);
-  });
+  }
+  const x = new Impl();
+  t.deepEqual(x(1, true, "str", null), ["1", "true", "str", "null"]);
+});
 
-  it("TypeScript generic TResult is enforced at compile time", () => {
-    class Negate extends CallableByProxy<boolean> {
-      _call(b: boolean): boolean {
-        return !b;
-      }
+test("dist/byProxy.cjs — TypeScript generic TResult is enforced at compile time", (t) => {
+  class Negate extends CallableByProxy<boolean> {
+    _call(b: boolean): boolean {
+      return !b;
     }
-    const negate = new Negate();
-    const result: boolean = negate(true);
-    expect(result).toBe(false);
-  });
+  }
+  const negate = new Negate();
+  const result: boolean = negate(true);
+  t.false(result);
 });

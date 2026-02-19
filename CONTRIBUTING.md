@@ -45,15 +45,16 @@ callable/
 │   ├── byCallee.ts
 │   ├── byClosure.ts
 │   └── byProxy.ts
-├── tests/                 # Jest test suite
+├── tests/                 # Ava test suite
 │   ├── callable.test.ts
-│   └── dist.test.ts
+│   ├── dist.test.ts
+│   └── dist-cjs.d.ts      # Type declarations for .cjs dist imports
 ├── dist/                  # Build output (generated, not committed)
 ├── rollup.config.mjs      # Rollup build configuration
 ├── tsconfig.json          # TypeScript config (production)
 ├── tsconfig.test.json     # TypeScript config (tests)
-├── eslint.config.mjs      # ESLint flat config (v9+)
-└── .prettierrc.json       # Prettier formatting rules
+├── .oxlintrc.json         # Oxlint configuration
+└── dprint.json            # dprint formatting rules
 ```
 
 ### Before submitting a pull request
