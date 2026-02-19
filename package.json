@@ -1,52 +1,106 @@
 {
   "name": "@lopatnov/callable",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "license": "Apache-2.0",
   "author": "lopatnov",
-  "description": "Abstract class Callable is abstraction for creating new instances of a class as functions, not objects",
+  "description": "Make TypeScript/JavaScript class instances callable as functions. Four implementation strategies: bind, closure, proxy, and callee.",
   "homepage": "https://lopatnov.github.io/callable/",
   "keywords": [
-    "abstract",
-    "class",
     "callable",
-    "typescript-library",
-    "typescript"
+    "abstract-class",
+    "function",
+    "typescript",
+    "javascript",
+    "proxy",
+    "bind",
+    "closure",
+    "functor",
+    "typescript-library"
   ],
   "umdName": "callable",
-  "main": "dist/byBind.js",
-  "module": "dist/byBind.es.js",
+  "main": "dist/byBind.cjs",
+  "module": "dist/byBind.esm.mjs",
   "types": "dist/byBind.d.ts",
+  "exports": {
+    "./byBind": {
+      "types": "./dist/byBind.d.ts",
+      "import": "./dist/byBind.esm.mjs",
+      "require": "./dist/byBind.cjs",
+      "browser": "./dist/byBind.umd.js",
+      "default": "./dist/byBind.umd.js"
+    },
+    "./byCallee": {
+      "types": "./dist/byCallee.d.ts",
+      "import": "./dist/byCallee.esm.mjs",
+      "require": "./dist/byCallee.cjs",
+      "browser": "./dist/byCallee.umd.js",
+      "default": "./dist/byCallee.umd.js"
+    },
+    "./byClosure": {
+      "types": "./dist/byClosure.d.ts",
+      "import": "./dist/byClosure.esm.mjs",
+      "require": "./dist/byClosure.cjs",
+      "browser": "./dist/byClosure.umd.js",
+      "default": "./dist/byClosure.umd.js"
+    },
+    "./byProxy": {
+      "types": "./dist/byProxy.d.ts",
+      "import": "./dist/byProxy.esm.mjs",
+      "require": "./dist/byProxy.cjs",
+      "browser": "./dist/byProxy.umd.js",
+      "default": "./dist/byProxy.umd.js"
+    }
+  },
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lopatnov/callable.git"
   },
-  "scripts": {
-    "build": "rollup -c rollup.config.ts",
-    "watch": "rollup -cw rollup.config.ts",
-    "configure-npm": "node ./set-registry.js -s https://registry.npmjs.org",
-    "configure-gpr": "node ./set-registry.js -s https://npm.pkg.github.com",
-    "test": "jest"
-  },
   "bugs": {
     "url": "https://github.com/lopatnov/callable/issues"
   },
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs",
+    "watch": "rollup -cw rollup.config.mjs",
+    "test": "ava",
+    "lint": "oxlint src/ tests/",
+    "lint:fix": "oxlint --fix src/ tests/",
+    "format": "dprint fmt",
+    "format:check": "dprint check",
+    "configure-npm": "node ./set-registry.js -s https://registry.npmjs.org",
+    "configure-gpr": "node ./set-registry.js -s https://npm.pkg.github.com"
+  },
+  "ava": {
+    "files": [
+      "tests/**/*.test.ts"
+    ],
+    "extensions": {
+      "ts": "commonjs"
+    },
+    "require": [
+      "tsx/cjs"
+    ],
+    "environmentVariables": {
+      "TSX_TSCONFIG_PATH": "./tsconfig.test.json"
+    }
+  },
   "devDependencies": {
-    "@lopatnov/rollup-plugin-uglify": "^2.1.1",
-    "@types/jest": "^26.0.23",
-    "@types/typescript": "^2.0.0",
-    "jest": "^27.0.6",
-    "jest-config": "^27.0.6",
-    "rollup": "^2.52.7",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-sourcemaps": "^0.6.3",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "terser": "^5.7.1",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.3.5"
+    "@lopatnov/rollup-plugin-uglify": "^4.0.0",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "ava": "^6.4.1",
+    "dprint": "^0.51.1",
+    "oxlint": "^1.48.0",
+    "rollup": "^4.57.1",
+    "tslib": "^2.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

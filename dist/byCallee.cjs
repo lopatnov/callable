@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Abstract base class that makes subclass instances callable as functions.
  *
@@ -24,14 +26,11 @@
  *
  * @typeParam TResult - The return type of the callable instance.
  */
-export default abstract class Callable<TResult> extends Function {
-  constructor() {
-    super("return arguments.callee._call.apply(arguments.callee, arguments)");
-  }
-
-  /**
-   * Called when the instance is invoked as a function.
-   * Must be implemented by subclasses.
-   */
-  abstract _call(...args: any[]): TResult;
+class Callable extends Function {
+    constructor() {
+        super("return arguments.callee._call.apply(arguments.callee, arguments)");
+    }
 }
+
+module.exports = Callable;
+//# sourceMappingURL=byCallee.cjs.map

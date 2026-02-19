@@ -6,9 +6,65 @@ If you are new to contributing to open source projects, the process can be intim
 
 ## Table of Contents
 
+1. [Development Setup](#development-setup)
 1. [Types of Contributions](#types-of-contributions)
 1. [Ground Rules & Expectations](#ground-rules--expectations)
 1. [How to Contribute](#how-to-contribute)
+
+---
+
+## Development Setup
+
+**Prerequisites:** Node.js ≥ 18, npm ≥ 9
+
+Clone the repository and install dependencies:
+
+```shell
+git clone https://github.com/lopatnov/callable
+cd callable
+npm install
+```
+
+### Available commands
+
+| Command                | Description                                          |
+| ---------------------- | ---------------------------------------------------- |
+| `npm run build`        | Compile TypeScript and bundle all outputs to `dist/` |
+| `npm test`             | Run the Jest test suite                              |
+| `npm run lint`         | Check code style with ESLint                         |
+| `npm run lint:fix`     | Auto-fix ESLint violations                           |
+| `npm run format`       | Format all files with Prettier                       |
+| `npm run format:check` | Check formatting without writing changes             |
+
+### Project structure
+
+```
+callable/
+├── src/                   # Source files (one per implementation)
+│   ├── byBind.ts
+│   ├── byCallee.ts
+│   ├── byClosure.ts
+│   └── byProxy.ts
+├── tests/                 # Ava test suite
+│   ├── callable.test.ts
+│   ├── dist.test.ts
+│   └── dist-cjs.d.ts      # Type declarations for .cjs dist imports
+├── dist/                  # Build output (generated, not committed)
+├── rollup.config.mjs      # Rollup build configuration
+├── tsconfig.json          # TypeScript config (production)
+├── tsconfig.test.json     # TypeScript config (tests)
+├── .oxlintrc.json         # Oxlint configuration
+└── dprint.json            # dprint formatting rules
+```
+
+### Before submitting a pull request
+
+Please ensure all of the following pass locally:
+
+1. `npm run lint` — no ESLint errors
+2. `npm run format:check` — no formatting violations
+3. `npm test` — all tests pass
+4. `npm run build` — build completes without errors
 
 ---
 
@@ -18,41 +74,41 @@ The common misconception about contributing to an open source project is that yo
 
 ### Developers can:
 
-* Take a look at the [open issues][issues] and find one you can tackle.
+- Take a look at the [open issues][issues] and find one you can tackle.
 
-* Locate and fix bugs.
+- Locate and fix bugs.
 
-* Implement innovative and awesome new features.
+- Implement innovative and awesome new features.
 
-* Help to improve tooling and testing.
+- Help to improve tooling and testing.
 
 ### Organizers and Planners can:
 
-* Link to duplicate issues, and suggest new issue labels, to help keep things organized.
+- Link to duplicate issues, and suggest new issue labels, to help keep things organized.
 
-* Go through the [open issues][issues] and suggest closing old ones.
+- Go through the [open issues][issues] and suggest closing old ones.
 
-* Ask clarifying questions on recently opened issues to move the discussion forward.
+- Ask clarifying questions on recently opened issues to move the discussion forward.
 
-* Help to organize meetups about the project.
+- Help to organize meetups about the project.
 
 ### Writers can:
 
-* Help to fix or improve the project's documentation.
+- Help to fix or improve the project's documentation.
 
-* Contribute to the project's [Wiki][wiki].
+- Contribute to the project's [Wiki][wiki].
 
 ### Designers can:
 
-* Design wire frames, mock-ups, graphical assets, and logos.
+- Design wire frames, mock-ups, graphical assets, and logos.
 
-* Put together a style guide to help the project have a consistent visual design.
+- Put together a style guide to help the project have a consistent visual design.
 
 ### Supporters can:
 
-* Answer questions for people on open issues, or about the project in general.
+- Answer questions for people on open issues, or about the project in general.
 
-* Help to moderate discussion boards or conversation channels.
+- Help to moderate discussion boards or conversation channels.
 
 ## Ground Rules & Expectations
 
@@ -66,8 +122,8 @@ If you'd like to contribute, a good place to start is by searching through the [
 
 If you don't see your idea listed, and you think it fits into the goals of the project, you should:
 
-* **Minor Contribution _(e.g., typo fix)_:** Open a pull request
-* **Major Contribution _(e.g., new feature)_:** Start by opening an issue first. That way, other people can weigh in on the discussion and planning before you do any work.
+- **Minor Contribution _(e.g., typo fix)_:** Open a pull request
+- **Major Contribution _(e.g., new feature)_:** Start by opening an issue first. That way, other people can weigh in on the discussion and planning before you do any work.
 
 To start making a contribution:
 
@@ -85,17 +141,17 @@ To start making a contribution:
    $ git remote add upstream https://github.com/lopatnov/callable
    ```
 
-1. Pull upstream changes into your local repositories `development` branch:
+1. Pull upstream changes into your local `master` branch:
 
    ```shell
-   $ git checkout development
-   $ git pull upstream development && git push origin development
+   $ git checkout master
+   $ git pull upstream master && git push origin master
    ```
 
-1. Create a new branch from the `development` branch:
-![branch](https://help.github.com/assets/images/help/branch/branch-selection-dropdown.png)
+1. Create a new branch from `master`:
+   ![branch](https://help.github.com/assets/images/help/branch/branch-selection-dropdown.png)
 
-   **IMPORTANT:** Make sure you are on the `development` branch first.
+   **IMPORTANT:** Make sure you are on the `master` branch first.
 
    ```shell
    $ git checkout -b <YOUR-NEW-BRANCH>
@@ -115,7 +171,7 @@ To start making a contribution:
    $ git push -u origin <YOUR-NEW-BRANCH>
    ```
 
-1. From your forked GitHub repository, open a pull request in the branch containing your contributions. Target the project's `development` branch for the pull request.
+1. From your forked GitHub repository, open a pull request in the branch containing your contributions. Target the project's `master` branch for the pull request.
 
 1. At this point, your contribution has been submitted for review. Please be patient while your contribution is being reviewed as this can take some time. Meanwhile, if there are questions or comments on your contribution, please respond and/or update with future commits.
 

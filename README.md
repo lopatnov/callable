@@ -1,165 +1,260 @@
-# @lopatnov/callable [![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40lopatnov%2Fcallable)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2F%40lopatnov%2Fcallable)
+# @lopatnov/callable
 
-![npm](https://img.shields.io/npm/dt/@lopatnov/callable)
 [![NPM version](https://badge.fury.io/js/%40lopatnov%2Fcallable.svg)](https://www.npmjs.com/package/@lopatnov/callable)
+![npm](https://img.shields.io/npm/dt/@lopatnov/callable)
 ![License](https://img.shields.io/github/license/lopatnov/callable)
-[![GitHub issues](https://img.shields.io/github/issues/lopatnov/callable)](https://github.com/lopatnov/callable/issues)
-[![GitHub forks](https://img.shields.io/github/forks/lopatnov/callable)](https://github.com/lopatnov/callable/network)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
 [![GitHub stars](https://img.shields.io/github/stars/lopatnov/callable)](https://github.com/lopatnov/callable/stargazers)
-[![Build Status](https://travis-ci.org/lopatnov/callable.png?branch=master)](https://travis-ci.org/lopatnov/callable)
+[![GitHub issues](https://img.shields.io/github/issues/lopatnov/callable)](https://github.com/lopatnov/callable/issues)
 
-[![Patreon](https://img.shields.io/badge/Donate-Patreon-informational)](https://www.patreon.com/lopatnov)
-[![sobe.ru](https://img.shields.io/static/v1?label=sobe.ru&message=%D0%91%D0%BB%D0%B0%D0%B3%D0%BE%D0%B4%D0%B0%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%8C&color=yellow&logo=data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAArlBMVEUAAAD//////////////////////////////////////////////////////////////////PP/3l7/9c//0yb/zAD/6ZP/zQf/++7/3FD/88X/0h7//v7/5oX/zATUqQDktgD/5HjQpgAFBACQcwD/zw/fsgCOcQD6yADZrQD2xAD8yQDnuADxwADcsADbrwDpugD3xQD5xwDjtQDywQD+ywD9ygDvvwD7yAD/1jRaObVGAAAAEHRSTlMAA3zg707pEJP8MMUBYN5fiwXJMQAAAAFiS0dEAf8CLd4AAAAHdElNRQflBgMAAxO4O2jCAAAAuElEQVQoz42S1w7CMAxFS8ueYZgNLZuyRynw/z9GdtxIkbgPceQT6Tq2vZwfEKx8wRPyiaViSYDABqQsAMq0OzxUqhbo9kBcavUM6A9AAtJAYDgC0ID7i+t4AghwfxanszlAGBnA/Flc0MfL1doA5s/ChoLtbg8QI392gpIBzf/AwYAWAsdTrIE05/nz5Xq7S6DKpenHM0pe+o/qg5Am74/0ybTkm+q6wG4iltV2LTko52idy+Banx9RYiS6Vrsc3AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMS0wNi0wM1QwMDowMzoxOCswMDowMLvSSCkAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjEtMDYtMDNUMDA6MDM6MTgrMDA6MDDKj/CVAAAAAElFTkSuQmCC)](https://sobe.ru/na/tech_knigi)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-lopatnov-informational?style=social&logo=linkedin)](https://www.linkedin.com/in/lopatnov/)
+A TypeScript abstract base class that lets you create class instances that behave as callable functions. Extend `Callable<TResult>`, implement the `_call` method, and every `new` instance becomes directly invokable — with full prototype chain, type safety, and IDE completion preserved.
 
-Abstract class Callable is abstraction for creating new instances of a class as functions, not objects.
+Four independent implementations are provided, each with different trade-offs, so you can pick the one that best fits your runtime environment and performance requirements.
 
 ## Install
-
-[![https://nodei.co/npm/@lopatnov/callable.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/@lopatnov/callable.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/@lopatnov/callable)
 
 ```shell
 npm install @lopatnov/callable
 ```
 
-[Browser](//lopatnov.github.io/callable/dist/callable.js)
+**Browser (CDN via jsDelivr):**
 
 ```html
-<script src="//lopatnov.github.io/callable/dist/byBind.min.js"></script>
-<script src="//lopatnov.github.io/callable/dist/byCallee.min.js"></script>
-<script src="//lopatnov.github.io/callable/dist/byClosure.min.js"></script>
-<script src="//lopatnov.github.io/callable/dist/byProxy.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byBind.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byCallee.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byClosure.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byProxy.umd.min.js"></script>
 ```
 
-## Import package to the project
+## Usage
 
-### TypeScript package import
+### TypeScript / ES Modules
 
 ```typescript
-import Callable from "@lopatnov/callable"; // byBind
-```
+import CallableByBind from "@lopatnov/callable/byBind";
+import CallableByCallee from "@lopatnov/callable/byCallee";
+import CallableByClosure from "@lopatnov/callable/byClosure";
+import CallableByProxy from "@lopatnov/callable/byProxy";
 
-or
-
-```typescript
-import CallableByBind from "@lopatnov/callable/dist/byBind";
-import CallableByCallee from "@lopatnov/callable/dist/byCallee";
-import CallableByClosure from "@lopatnov/callable/dist/byClosure";
-import CallableByProxy from "@lopatnov/callable/dist/byProxy";
-```
-
-### JavaScript package import
-
-```javascript
-var Callable = require("@lopatnov/callable"); // byBind
-```
-
-or
-
-```javascript
-var CallableByBind = require("@lopatnov/callable/dist/byBind");
-var CallableByCallee = require("@lopatnov/callable/dist/byCallee");
-var CallableByClosure = require("@lopatnov/callable/dist/byClosure");
-var CallableByProxy = require("@lopatnov/callable/dist/byProxy");
-```
-
-## How to use
-
-### TypeScript usage
-
-```typescript
-import Callable from "@lopatnov/callable";
-
-class ChildCallable extends Callable<string> {
+class Greeter extends CallableByBind<string> {
   _call(...args: any[]): string {
-    return `Hello ${args[0]}`;
+    return `Hello, ${args[0]}!`;
   }
 }
 
-let x = new ChildCallable(); // <-- returns function
-let xc = x("World"); // <-- calls _call function of ChildCallable class
-
-console.log(xc); // "Hello World"
+const greet = new Greeter(); // instance is a callable function
+console.log(greet("World")); // "Hello, World!"
 ```
 
-### JavaScript usage
+### CommonJS
 
 ```javascript
-var Callable = require("@lopatnov/callable");
+const CallableByBind = require("@lopatnov/callable/byBind");
 
-class ChildCallable extends Callable {
+class Greeter extends CallableByBind {
   _call(...args) {
-    return `Hello ${args[0]}`;
+    return `Hello, ${args[0]}!`;
   }
 }
 
-let x = new ChildCallable(); // <-- returns function
-let xc = x("World"); // <-- calls _call function of ChildCallable class
-
-console.log(xc); // "Hello World"
+const greet = new Greeter();
+console.log(greet("World")); // "Hello, World!"
 ```
 
-## Description of abstract class `Callable<TResult>` and it's variations
+### Browser UMD
 
-Abstract class `Callable` has different realizations. They have different plus side and minus side.
+After loading the script tag, the class is available as the global `callable`:
 
-The parameter `TResult` is a result type of a function.
+```html
+<script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byBind.umd.min.js"></script>
+<script>
+  class Greeter extends callable {
+    _call(...args) {
+      return `Hello, ${args[0]}!`;
+    }
+  }
 
-## `abstract class CallableByBind<TResult>`
+  const greet = new Greeter();
+  console.log(greet("World")); // "Hello, World!"
+</script>
+```
 
-This is the function bind way.
+## API
 
-Plus side
+### Abstract method
 
-- Doesn’t rely on deprecated or modern features.
-- No need to modify prototypes.
+Every subclass must implement:
 
-Minus side
+```typescript
+abstract _call(...args: any[]): TResult
+```
 
-- Requires wrapping the function object in a bound function.
+| Parameter | Type  | Description                                                |
+| --------- | ----- | ---------------------------------------------------------- |
+| `...args` | any[] | Arguments passed when the instance is called as a function |
 
-## `abstract class CallableByCallee<TResult>`
+**Returns:** `TResult` — the value returned to the caller.
 
-Plus side
+### Implementations comparison
 
-- Very simple.
-- No need to modify prototypes.
+| Class               | Import path                    | Mechanism                         | Strict mode              | Modifies prototype |
+| ------------------- | ------------------------------ | --------------------------------- | ------------------------ | ------------------ |
+| `CallableByBind`    | `@lopatnov/callable/byBind`    | `Function.prototype.bind`         | ✅ Yes                   | ❌ No              |
+| `CallableByCallee`  | `@lopatnov/callable/byCallee`  | `arguments.callee`                | ❌ No (sloppy mode only) | ❌ No              |
+| `CallableByClosure` | `@lopatnov/callable/byClosure` | Closure + `Object.setPrototypeOf` | ✅ Yes                   | ✅ Yes             |
+| `CallableByProxy`   | `@lopatnov/callable/byProxy`   | `Proxy` apply trap                | ✅ Yes                   | ❌ No              |
 
-Minus side
+---
 
-- arguments and arguments.callee are unavailable in ‘strict mode’, see MDN for more.
+### `CallableByBind<TResult>`
 
-## `abstract class CallableByProxy<TResult>`
+Uses `Function.prototype.bind` to return a bound function from the constructor. The bound function delegates to `_call` on the original instance.
 
-Plus side
+**Pros:**
 
-- Simple, native way to intercept calls and redirect them.
-- No need to modify prototypes.
+- No deprecated APIs
+- No prototype modification
+- Works in strict mode
 
-Minus side
+**Cons:**
 
-- Requires wrapping objects created by Callable in a Proxy.
-- A small performance penalty for using Proxy handlers.
+- Constructor returns a bound wrapper, not the raw instance
 
-## `abstract class CallableByClosure<TResult>`
+```typescript
+import CallableByBind from "@lopatnov/callable/byBind";
 
-Plus side
+class Multiplier extends CallableByBind<number> {
+  constructor(private factor: number) {
+    super();
+  }
+  _call(value: number): number {
+    return value * this.factor;
+  }
+}
 
-- Requires no wrapping of the returned object with a Proxy or bind.
+const triple = new Multiplier(3);
+console.log(triple(7)); // 21
+```
 
-Minus side
+---
 
-- Requires modifying prototypes.
-- Modifying prototypes is slow and has other side effects, see MDN.
+### `CallableByCallee<TResult>`
+
+Uses `arguments.callee` inside the dynamically constructed function body to reference the function itself.
+
+**Pros:**
+
+- Minimal implementation
+
+**Cons:**
+
+- `arguments.callee` is forbidden in strict mode (`"use strict"` or ES modules)
+- Not suitable for modern bundler output
+
+```javascript
+// Must be used in non-strict (sloppy) mode only
+const CallableByCallee = require("@lopatnov/callable/byCallee");
+
+class Adder extends CallableByCallee {
+  _call(a, b) {
+    return a + b;
+  }
+}
+
+const add = new Adder();
+console.log(add(2, 3)); // 5
+```
+
+---
+
+### `CallableByClosure<TResult>`
+
+Creates an anonymous function in the constructor that closes over a reference to itself, then rewires the prototype chain with `Object.setPrototypeOf`.
+
+**Pros:**
+
+- Works in strict mode
+- No bound wrapper — the returned object is the closure itself
+
+**Cons:**
+
+- Calls `Object.setPrototypeOf`, which may affect JIT optimization
+- Modifies the prototype chain
+
+```typescript
+import CallableByClosure from "@lopatnov/callable/byClosure";
+
+class Counter extends CallableByClosure<void> {
+  private count = 0;
+  _call(): void {
+    console.log(++this.count);
+  }
+}
+
+const counter = new Counter();
+counter(); // 1
+counter(); // 2
+```
+
+---
+
+### `CallableByProxy<TResult>`
+
+Wraps the constructed instance in an ES6 `Proxy` with an `apply` trap that delegates to `_call`.
+
+**Pros:**
+
+- Clean, idiomatic ES2015+ approach
+- Works in strict mode
+- No prototype modification
+
+**Cons:**
+
+- Adds a `Proxy` wrapper with a minor per-call overhead
+
+```typescript
+import CallableByProxy from "@lopatnov/callable/byProxy";
+
+class Logger extends CallableByProxy<void> {
+  _call(message: string): void {
+    console.log(`[LOG] ${message}`);
+  }
+}
+
+const log = new Logger();
+log("Server started"); // [LOG] Server started
+```
+
+---
+
+## Distribution formats
+
+Each implementation is published in four formats:
+
+| Format         | File                     | Use case                         |
+| -------------- | ------------------------ | -------------------------------- |
+| CommonJS       | `dist/{name}.cjs`        | Node.js `require()`              |
+| ES Module      | `dist/{name}.esm.mjs`    | Bundlers, native ESM `import`    |
+| UMD            | `dist/{name}.umd.js`     | Browser globals (with sourcemap) |
+| UMD (minified) | `dist/{name}.umd.min.js` | Production browser               |
+
+TypeScript declaration files (`*.d.ts`) are included for all four implementations.
 
 ## Demo
 
-See, how it's working: [https://runkit.com/lopatnov/callable-demo](https://runkit.com/lopatnov/callable-demo)
+Try it live:
 
-Test it with a runkit: [https://npm.runkit.com/@lopatnov/callable](https://npm.runkit.com/%40lopatnov%2Fcallable)
+- [RunKit demo](https://runkit.com/lopatnov/callable-demo)
+- [npm.runkit.com](https://npm.runkit.com/%40lopatnov%2Fcallable)
 
-## Rights and Agreements
+## Contributing
 
-License [Apache-2.0](https://github.com/lopatnov/callable/blob/master/LICENSE)
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-Copyright 2019-2021 Oleksandr Lopatnov
+If you find this project useful, consider giving it a ⭐ on [GitHub](https://github.com/lopatnov/callable) — it helps others discover it.
+
+## License
+
+[Apache-2.0](https://github.com/lopatnov/callable/blob/master/LICENSE)
+
+Copyright 2019–2026 Oleksandr Lopatnov

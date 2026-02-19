@@ -26,11 +26,15 @@
  *
  * @typeParam TResult - The return type of the callable instance.
  */
-export default abstract class Callable<TResult> extends Function {
-    constructor();
-    /**
-     * Called when the instance is invoked as a function.
-     * Must be implemented by subclasses.
-     */
-    abstract _call(...args: any[]): TResult;
+class Callable extends Function {
+    constructor() {
+        super();
+        const closure = function (...args) {
+            return closure._call(...args);
+        };
+        return Object.setPrototypeOf(closure, new.target.prototype);
+    }
 }
+
+export { Callable as default };
+//# sourceMappingURL=byClosure.esm.mjs.map
