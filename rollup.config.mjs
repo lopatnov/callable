@@ -81,7 +81,9 @@ fs.readdirSync("./src").forEach((file) => {
       }),
       resolve(),
       commonjs(),
-      uglify()
+      uglify({
+        hook: "renderChunk"
+      })
     ]
   });
 });

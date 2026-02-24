@@ -1,17 +1,31 @@
 # @lopatnov/callable
 
-[![NPM version](https://badge.fury.io/js/%40lopatnov%2Fcallable.svg)](https://www.npmjs.com/package/@lopatnov/callable)
-![npm](https://img.shields.io/npm/dt/@lopatnov/callable)
-![License](https://img.shields.io/github/license/lopatnov/callable)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
-[![GitHub stars](https://img.shields.io/github/stars/lopatnov/callable)](https://github.com/lopatnov/callable/stargazers)
+> A TypeScript abstract base class that lets you create class instances that behave as callable functions.
+> Extend `Callable<TResult>`, implement `_call`, and every `new` instance becomes directly invokable —
+> with full prototype chain, type safety, and IDE completion preserved.
+
+[![npm downloads](https://img.shields.io/npm/dt/@lopatnov/callable)](https://www.npmjs.com/package/@lopatnov/callable)
+[![npm version](https://badge.fury.io/js/%40lopatnov%2Fcallable.svg)](https://www.npmjs.com/package/@lopatnov/callable)
+[![License](https://img.shields.io/github/license/lopatnov/callable)](https://github.com/lopatnov/callable/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/lopatnov/callable)](https://github.com/lopatnov/callable/issues)
+[![GitHub stars](https://img.shields.io/github/stars/lopatnov/callable)](https://github.com/lopatnov/callable/stargazers)
 
-A TypeScript abstract base class that lets you create class instances that behave as callable functions. Extend `Callable<TResult>`, implement the `_call` method, and every `new` instance becomes directly invokable — with full prototype chain, type safety, and IDE completion preserved.
+---
 
-Four independent implementations are provided, each with different trade-offs, so you can pick the one that best fits your runtime environment and performance requirements.
+## Table of Contents
 
-## Install
+- [Installation](#installation)
+- [Usage](#usage)
+- [API](#api)
+- [Distribution Formats](#distribution-formats)
+- [Demo](#demo)
+- [Contributing](#contributing)
+- [Built With](#built-with)
+- [License](#license)
+
+---
+
+## Installation
 
 ```shell
 npm install @lopatnov/callable
@@ -25,6 +39,8 @@ npm install @lopatnov/callable
 <script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byClosure.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@lopatnov/callable/dist/byProxy.umd.min.js"></script>
 ```
+
+---
 
 ## Usage
 
@@ -79,6 +95,8 @@ After loading the script tag, the class is available as the global `callable`:
 </script>
 ```
 
+---
+
 ## API
 
 ### Abstract method
@@ -89,9 +107,9 @@ Every subclass must implement:
 abstract _call(...args: any[]): TResult
 ```
 
-| Parameter | Type  | Description                                                |
-| --------- | ----- | ---------------------------------------------------------- |
-| `...args` | any[] | Arguments passed when the instance is called as a function |
+| Parameter | Type    | Description                                                |
+| --------- | ------- | ---------------------------------------------------------- |
+| `...args` | `any[]` | Arguments passed when the instance is called as a function |
 
 **Returns:** `TResult` — the value returned to the caller.
 
@@ -110,15 +128,9 @@ abstract _call(...args: any[]): TResult
 
 Uses `Function.prototype.bind` to return a bound function from the constructor. The bound function delegates to `_call` on the original instance.
 
-**Pros:**
+**Pros:** no deprecated APIs, no prototype modification, works in strict mode.
 
-- No deprecated APIs
-- No prototype modification
-- Works in strict mode
-
-**Cons:**
-
-- Constructor returns a bound wrapper, not the raw instance
+**Cons:** constructor returns a bound wrapper, not the raw instance.
 
 ```typescript
 import CallableByBind from "@lopatnov/callable/byBind";
@@ -140,19 +152,13 @@ console.log(triple(7)); // 21
 
 ### `CallableByCallee<TResult>`
 
-Uses `arguments.callee` inside the dynamically constructed function body to reference the function itself.
+Uses `arguments.callee` inside the dynamically constructed function body.
 
-**Pros:**
+**Pros:** minimal implementation.
 
-- Minimal implementation
-
-**Cons:**
-
-- `arguments.callee` is forbidden in strict mode (`"use strict"` or ES modules)
-- Not suitable for modern bundler output
+**Cons:** `arguments.callee` is forbidden in strict mode — not suitable for modern bundlers.
 
 ```javascript
-// Must be used in non-strict (sloppy) mode only
 const CallableByCallee = require("@lopatnov/callable/byCallee");
 
 class Adder extends CallableByCallee {
@@ -169,17 +175,11 @@ console.log(add(2, 3)); // 5
 
 ### `CallableByClosure<TResult>`
 
-Creates an anonymous function in the constructor that closes over a reference to itself, then rewires the prototype chain with `Object.setPrototypeOf`.
+Creates an anonymous function in the constructor that closes over itself, then rewires the prototype chain with `Object.setPrototypeOf`.
 
-**Pros:**
+**Pros:** works in strict mode, no bound wrapper.
 
-- Works in strict mode
-- No bound wrapper — the returned object is the closure itself
-
-**Cons:**
-
-- Calls `Object.setPrototypeOf`, which may affect JIT optimization
-- Modifies the prototype chain
+**Cons:** calls `Object.setPrototypeOf`, which may affect JIT optimization.
 
 ```typescript
 import CallableByClosure from "@lopatnov/callable/byClosure";
@@ -202,15 +202,9 @@ counter(); // 2
 
 Wraps the constructed instance in an ES6 `Proxy` with an `apply` trap that delegates to `_call`.
 
-**Pros:**
+**Pros:** clean ES2015+ approach, works in strict mode, no prototype modification.
 
-- Clean, idiomatic ES2015+ approach
-- Works in strict mode
-- No prototype modification
-
-**Cons:**
-
-- Adds a `Proxy` wrapper with a minor per-call overhead
+**Cons:** adds a `Proxy` wrapper with a minor per-call overhead.
 
 ```typescript
 import CallableByProxy from "@lopatnov/callable/byProxy";
@@ -227,7 +221,7 @@ log("Server started"); // [LOG] Server started
 
 ---
 
-## Distribution formats
+## Distribution Formats
 
 Each implementation is published in four formats:
 
@@ -240,6 +234,8 @@ Each implementation is published in four formats:
 
 TypeScript declaration files (`*.d.ts`) are included for all four implementations.
 
+---
+
 ## Demo
 
 Try it live:
@@ -247,14 +243,28 @@ Try it live:
 - [RunKit demo](https://runkit.com/lopatnov/callable-demo)
 - [npm.runkit.com](https://npm.runkit.com/%40lopatnov%2Fcallable)
 
+---
+
 ## Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-If you find this project useful, consider giving it a ⭐ on [GitHub](https://github.com/lopatnov/callable) — it helps others discover it.
+- Bug reports → [open an issue](https://github.com/lopatnov/callable/issues)
+- Questions → [Discussions](https://github.com/lopatnov/callable/discussions)
+- Found it useful? A [star on GitHub](https://github.com/lopatnov/callable) helps others discover the project
+
+---
+
+## Built With
+
+- [TypeScript](https://www.typescriptlang.org/) — strict typing throughout
+- [Rollup](https://rollupjs.org/) — bundled to ESM, CJS, and UMD formats
+- [Ava](https://github.com/avajs/ava) — fast, concurrent test runner
+- [OXLint](https://oxc.rs/docs/guide/usage/linter.html) — fast JavaScript/TypeScript linter
+- [dprint](https://dprint.dev/) — code formatter
+
+---
 
 ## License
 
-[Apache-2.0](https://github.com/lopatnov/callable/blob/master/LICENSE)
-
-Copyright 2019–2026 Oleksandr Lopatnov
+[Apache-2.0](https://github.com/lopatnov/callable/blob/master/LICENSE) © 2019–2026 [Oleksandr Lopatnov](https://github.com/lopatnov) · [LinkedIn](https://www.linkedin.com/in/lopatnov/)
